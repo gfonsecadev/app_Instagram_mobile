@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical"
+        tools:context=".activity.FiltroActivity">
+
+    <include layout="@layout/tooll_bar" android:id="@+id/toolbar"/>
+
+
+
+    <ImageView
+        android:id="@+id/imageFiltro"
+        android:layout_width="match_parent"
+        android:src="@drawable/padrao"
+        android:layout_margin="15dp"
+        android:scaleType="centerCrop"
+        android:layout_weight="1"
+        android:layout_height="match_parent"></ImageView>
+
+
+
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/descricao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:hint="Descrição"
+            tools:ignore="TouchTargetSizeCheck,TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
+    <FrameLayout
+        android:layout_gravity="center"
+        android:id="@+id/frameFragment"
+        android:layout_width="match_parent"
+        android:layout_margin="10dp"
+        android:layout_height="150dp">
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/buttonFiltros"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:text="Filtros"
+            android:textSize="20dp"
+            android:background="@drawable/background_botao_filtros_nao_clicado"
+            android:layout_weight="1"/>
+        <Button
+            android:id="@+id/buttonOutrosEfeitos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:background="@drawable/background_botao_filtros_nao_clicado"
+            android:textSize="20dp"
+            android:layout_weight="1"
+            android:text="Outros"/>
+
+
+    </LinearLayout>
+
+
+
+
+    </LinearLayout>
+
+</FrameLayout>
