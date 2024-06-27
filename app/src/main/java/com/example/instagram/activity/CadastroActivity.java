@@ -30,7 +30,7 @@ public class CadastroActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding=ActivityCadastroBinding.inflate(getLayoutInflater());
+        binding = ActivityCadastroBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         binding.buttonCadastrar.setOnClickListener(new View.OnClickListener() {
@@ -41,16 +41,17 @@ public class CadastroActivity extends AppCompatActivity {
         });
 
     }
-    //método responsável por cadastrar usuários e validar os campos
-    public void cadastrar(){
-        String nome=binding.editNomeCadastro.getText().toString();
-        String email=binding.editEmailCadastro.getText().toString();
-        String senha=binding.editSenhaCadastro.getText().toString();
 
-        if(!nome.equals("")){
-            if(!email.equals("")){
-                if(!senha.equals("")){
-                    Usuario usuario=new Usuario();
+    //método responsável por cadastrar usuários e validar os campos
+    public void cadastrar() {
+        String nome = binding.editNomeCadastro.getText().toString();
+        String email = binding.editEmailCadastro.getText().toString();
+        String senha = binding.editSenhaCadastro.getText().toString();
+
+        if (!nome.equals("")) {
+            if (!email.equals("")) {
+                if (!senha.equals("")) {
+                    Usuario usuario = new Usuario();
                     usuario.setNome(nome);
                     usuario.setEmail(email);
                     usuario.setFoto("");
@@ -58,46 +59,48 @@ public class CadastroActivity extends AppCompatActivity {
                     cadastroFirebase(usuario);
 
 
-                }else {
+                } else {
                     binding.editSenhaCadastro.requestFocus();
                     binding.editSenhaCadastro.setError("Digite uma senha");
 
                 }
-            }else {
+            } else {
                 binding.editEmailCadastro.requestFocus();
                 binding.editEmailCadastro.setError("Digite um email");
 
             }
-        }else {
+        } else {
             binding.editNomeCadastro.requestFocus();
             binding.editNomeCadastro.setError("Digite seu nome");
 
         }
     }
+
+
     //método para cadastro de usuário no firebaseAuth
-    public void cadastroFirebase(Usuario usuario){
-        FirebaseAuth firebaseAuth= FirebaseInstance.instanceFirebaseAuth();
-        firebaseAuth.createUserWithEmailAndPassword(usuario.getEmail(),usuario.getSenha()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+    public void cadastroFirebase(Usuario usuario) {
+        FirebaseAuth firebaseAuth = FirebaseInstance.instanceFirebaseAuth();
+        firebaseAuth.createUserWithEmailAndPassword(usuario.getEmail(), usuario.getSenha()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     try {
                         usuario.setId(task.getResult().getUser().getUid());
                         usuario.salvar();
-                        UsuarioFirebase.salvarProfile(usuario,binding.layoutProgressCadastro,null);
-                        Toast.makeText(CadastroActivity.this,"Bem vindo: "+usuario.getNome(),Toast.LENGTH_LONG ).show();
+                        UsuarioFirebase.salvarProfile(usuario, binding.layoutProgressCadastro, null);
+                        Toast.makeText(CadastroActivity.this, "Bem vindo: " + usuario.getNome(), Toast.LENGTH_LONG).show();
                         startActivity(new Intent(CadastroActivity.this, MainActivity.class));
                         finish();
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 
-                }else {
+                } else {
                     binding.progressCadastrar.setVisibility(View.GONE);
-                    Toast toast=new Toast(getApplicationContext());
-                    toast.setView(View.inflate(getApplicationContext(), R.layout.erro_salvar,null));
+                    Toast toast = new Toast(getApplicationContext());
+                    toast.setView(View.inflate(getApplicationContext(), R.layout.erro_salvar, null));
                     toast.setDuration(Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.CENTER,0,0);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
                     toast.show();
                     String excessao = "";
                     try {

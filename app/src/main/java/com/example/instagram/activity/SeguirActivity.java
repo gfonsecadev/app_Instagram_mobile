@@ -1,10 +1,10 @@
 package com.example.instagram.activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.instagram.R;
@@ -39,36 +39,34 @@ public class SeguirActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding=ActivitySeguirBinding.inflate(getLayoutInflater());
+        binding = ActivitySeguirBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         carregarIntent();
         recuperarDados();
 
 
-
     }
-
-
 
 
     //carregar intent recebida do SearchFragment
-    public void carregarIntent(){
-        Bundle bundle=getIntent().getExtras();
-        if(bundle.containsKey("usuarioProcurado")){
-            usuarioRecebido= (Usuario) bundle.getSerializable("usuarioProcurado");
+    public void carregarIntent() {
+        Bundle bundle = getIntent().getExtras();
+        if (bundle.containsKey("usuarioProcurado")) {
+            usuarioRecebido = (Usuario) bundle.getSerializable("usuarioProcurado");//para objetos usamos o serializable ou parcellable
         }
 
     }
-    public void recuperarDados(){
+
+    public void recuperarDados() {
         setSupportActionBar(binding.toolbarSeguir.toollBarPrincipal);
         binding.fragmentSeguir.textNomeUsuario.setText("");
         binding.toolbarSeguir.imageToolbar.setVisibility(View.GONE);
         getSupportActionBar().setTitle(usuarioRecebido.getNome());
 
-        if(!usuarioRecebido.getFoto().equals("")){
+        if (!usuarioRecebido.getFoto().equals("")) {
             Glide.with(this).load(usuarioRecebido.getFoto()).into(binding.fragmentSeguir.imagePerfil);
-        }else {
+        } else {
             binding.fragmentSeguir.imagePerfil.setImageResource(R.drawable.padrao);
         }
 
@@ -76,36 +74,36 @@ public class SeguirActivity extends AppCompatActivity {
     }
 
     //carrega informações do usuário recebido sempre atualizado e verifica se usuário logado é um seguidor
-    public void carregarUsuario(){
+    public void carregarUsuario() {
 
         databaseReferenceAmigo = FirebaseInstance.instanceDatabase().child("usuarios").child(usuarioRecebido.getId());
         listenerAmigo = databaseReferenceAmigo.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                usuarioRecebidoAtualizado=snapshot.child("dadosUsuario").getValue(Usuario.class);
+                usuarioRecebidoAtualizado = snapshot.child("dadosUsuario").getValue(Usuario.class);
                 binding.fragmentSeguir.textPublicacoes.setText(String.valueOf(usuarioRecebidoAtualizado.getPublicacoes()));
                 binding.fragmentSeguir.textSeguindo.setText(String.valueOf(usuarioRecebidoAtualizado.getSeguindo()));
                 binding.fragmentSeguir.textSeguidores.setText(String.valueOf(usuarioRecebidoAtualizado.getSeguidores()));
-                binding.fragmentSeguir.textViewsuasPublicacoes.setText("Publicações de "+ usuarioRecebidoAtualizado.getNome());
+                binding.fragmentSeguir.textViewsuasPublicacoes.setText("Publicações de " + usuarioRecebidoAtualizado.getNome());
 
-                if(listPublicacoes==null){
-                    listPublicacoes=new ArrayList<>();
-                    for (DataSnapshot db:snapshot.child("postagens").getChildren()){
-                        Postagens postagens=db.getValue(Postagens.class);
+                if (listPublicacoes == null) {
+                    listPublicacoes = new ArrayList<>();
+                    for (DataSnapshot db : snapshot.child("postagens").getChildren()) {
+                        Postagens postagens = db.getValue(Postagens.class);
                         listPublicacoes.add(postagens.getUrlPostagem());
                     }
                     carregarGridView();
                 }
 
 
-                if(usuarioRecebidoAtualizado.getSeguidores()>0){
-                    for (DataSnapshot ds :snapshot.child("seguidores").getChildren()) {
-                        String chave=ds.getKey();
-                        if(chave.equals(usuarioLogado.getId())){
+                if (usuarioRecebidoAtualizado.getSeguidores() > 0) {
+                    for (DataSnapshot ds : snapshot.child("seguidores").getChildren()) {
+                        String chave = ds.getKey();
+                        if (chave.equals(usuarioLogado.getId())) {
                             binding.fragmentSeguir.textEditarPerfil.setText("seguindo");
                             binding.fragmentSeguir.textEditarPerfil.setOnClickListener(null);
                             binding.fragmentSeguir.textEditarPerfil.setBackground(getDrawable(R.drawable.botao_sem_efeito_clique));
-                        }else {
+                        } else {
                             binding.fragmentSeguir.textEditarPerfil.setText("seguir");
                             binding.fragmentSeguir.textEditarPerfil.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -116,7 +114,7 @@ public class SeguirActivity extends AppCompatActivity {
                         }
 
                     }
-                }else {
+                } else {
                     binding.fragmentSeguir.textEditarPerfil.setText("seguir");
                     binding.fragmentSeguir.textEditarPerfil.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -135,14 +133,15 @@ public class SeguirActivity extends AppCompatActivity {
         });
 
     }
+
     //carrega informações do usuário logado sempre atualizadas
-    public void carregarLogado(){
+    public void carregarLogado() {
 
         databaseReferenceLogado = FirebaseInstance.instanceDatabase().child("usuarios").child(UsuarioFirebase.dadosUsuario().getId());
         listenerLogado = databaseReferenceLogado.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                usuarioLogado=snapshot.child("dadosUsuario").getValue(Usuario.class);
+                usuarioLogado = snapshot.child("dadosUsuario").getValue(Usuario.class);
 
             }
 
@@ -153,7 +152,6 @@ public class SeguirActivity extends AppCompatActivity {
         });
 
     }
-
 
 
     @Override
@@ -173,7 +171,7 @@ public class SeguirActivity extends AppCompatActivity {
     }
 
     //metódo para seguir um usuário e atualizar informações no firebase
-    private void seguirUsuario(){
+    private void seguirUsuario() {
         HashMap<String, Object> sequindo = new HashMap<>();
         sequindo.put("nome", usuarioRecebido.getNome());
         sequindo.put("foto", usuarioRecebido.getFoto());
@@ -200,13 +198,12 @@ public class SeguirActivity extends AppCompatActivity {
 
     }
 
-    public void carregarGridView(){
+    public void carregarGridView() {
 
-        adapterGridPerfil=new AdapterGridPerfil(this,R.layout.grid_postagens,listPublicacoes);
-        binding.fragmentSeguir.gridPerfil.setColumnWidth(getResources().getDisplayMetrics().widthPixels/3);
+        adapterGridPerfil = new AdapterGridPerfil(this, R.layout.grid_postagens, listPublicacoes);
+        binding.fragmentSeguir.gridPerfil.setColumnWidth(getResources().getDisplayMetrics().widthPixels / 3);
         binding.fragmentSeguir.gridPerfil.setAdapter(adapterGridPerfil);
     }
-
 
 
 }

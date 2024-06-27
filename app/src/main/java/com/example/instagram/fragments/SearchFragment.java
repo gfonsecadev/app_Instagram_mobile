@@ -87,11 +87,15 @@ public class SearchFragment extends Fragment {
         binding=FragmentSearchBinding.inflate(getLayoutInflater());
         carregarUsuarios();
 
+        //Instãncia do adapter
         adapterPesquisa=new AdapterPesquisa(getActivity(),listPesquisaAchados);
-        RecyclerView.LayoutManager manager=new LinearLayoutManager(getActivity());
-        binding.recyclerPesquisa.setLayoutManager(manager);
+        //instância do LayoutManager
+        binding.recyclerPesquisa.setLayoutManager(new LinearLayoutManager(getActivity()));
+        //para não mudar de tamanho
         binding.recyclerPesquisa.setHasFixedSize(true);
+        //renderiza um divisor entre a lista
         binding.recyclerPesquisa.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayout.VERTICAL));
+        //setamos o adapter
         binding.recyclerPesquisa.setAdapter(adapterPesquisa);
 
 
@@ -143,10 +147,9 @@ public class SearchFragment extends Fragment {
                 for (DataSnapshot db:snapshot.getChildren()){
                     Usuario usuario=db.child("dadosUsuario").getValue(Usuario.class);
                     if(!usuario.getEmail().equals(UsuarioFirebase.dadosUsuario().getEmail()))
-                    listPesquisa.add(usuario);
+                        listPesquisa.add(usuario);
                 }
-
-
+                
             }
 
             @Override

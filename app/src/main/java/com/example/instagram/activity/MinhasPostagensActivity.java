@@ -1,10 +1,9 @@
 package com.example.instagram.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.MotionEvent;
-import android.widget.LinearLayout;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.instagram.R;
@@ -22,7 +21,7 @@ public class MinhasPostagensActivity extends AppCompatActivity {
         binding = ActivityMinhasPostagensBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        zoomScale=new ZoomScale(binding.layoutPost.imagePost,getApplicationContext());
+        zoomScale = new ZoomScale(binding.layoutPost.imagePost, getApplicationContext());
 
         carregarIntent();
 
@@ -30,11 +29,7 @@ public class MinhasPostagensActivity extends AppCompatActivity {
     }
 
 
-
-
-
-    public void carregarIntent(){
-
+    public void carregarIntent() {
 
 
         Bundle bundle = getIntent().getExtras();

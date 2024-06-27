@@ -30,7 +30,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
+    //dentro de build.gradle nivel de modulo ta taga android
     buildFeatures{
         viewBinding=true;
     }

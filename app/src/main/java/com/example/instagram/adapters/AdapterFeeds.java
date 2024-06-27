@@ -69,10 +69,6 @@ public class AdapterFeeds extends RecyclerView.Adapter<AdapterFeeds.HolderFeed> 
 
 
 
-
-
-
-
     }
 
     @Override

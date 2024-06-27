@@ -1,14 +1,8 @@
 package com.example.instagram.activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -20,11 +14,15 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.instagram.fragments.EdicaoImagemFragment;
-import com.example.instagram.fragments.ImagemFiltrosFragment;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.example.instagram.R;
 import com.example.instagram.databinding.ActivityFiltroBinding;
-import com.example.instagram.fragments.PostagemFragment;
+import com.example.instagram.fragments.EdicaoImagemFragment;
+import com.example.instagram.fragments.ImagemFiltrosFragment;
 import com.example.instagram.model.Feed;
 import com.example.instagram.model.Postagens;
 import com.example.instagram.model.Usuario;
@@ -37,36 +35,33 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 public class FiltroActivity extends AppCompatActivity {
-    static
-    {
+    static {
         System.loadLibrary("NativeImageProcessor");
     }
 
+    float x, y, dx, dy;
     private ActivityFiltroBinding binding;
     private Bitmap bitmaprecebido;
     private Bundle bundle;
-    private float scale=1f;
-    private float scalex,scaley;
+    private float scale = 1f;
+    private float scalex, scaley;
     private ScaleGestureDetector zoom;
     private Usuario usuarioLogado;
     private List<Usuario> listSeguidores;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding=ActivityFiltroBinding.inflate(getLayoutInflater());
+        binding = ActivityFiltroBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         carregarLogado();
 
@@ -82,51 +77,50 @@ public class FiltroActivity extends AppCompatActivity {
 
         selecionarEfeito();
         botaoClicadoFiltros();
-        ImagemFiltrosFragment imagemFiltrosFragment=new ImagemFiltrosFragment();
-        FragmentManager fr=getSupportFragmentManager();
-        FragmentTransaction ft=fr.beginTransaction();
+        ImagemFiltrosFragment imagemFiltrosFragment = new ImagemFiltrosFragment();
+        FragmentManager fr = getSupportFragmentManager();
+        FragmentTransaction ft = fr.beginTransaction();
         imagemFiltrosFragment.setArguments(bundle);
-        ft.replace(R.id.frameFragment,imagemFiltrosFragment);
+        ft.replace(R.id.frameFragment, imagemFiltrosFragment);
         ft.commit();
 
 
         scalex = binding.imageFiltro.getScaleX();
-        scaley=binding.imageFiltro.getScaleY();
-        zoom=new ScaleGestureDetector(this,new zoom());
+        scaley = binding.imageFiltro.getScaleY();
+        zoom = new ScaleGestureDetector(this, new zoom());
 
 
     }
+
     //recupera dados da recebidas do PostagemFragment
-    private void recuperarIntent(){
-        bitmaprecebido=null;
-        bundle=getIntent().getExtras();
-        if(bundle.containsKey("camera")){
-            byte [] bytes=bundle.getByteArray("camera");
-            bitmaprecebido= BitmapFactory.decodeByteArray(bytes,0,bytes.length );
+    private void recuperarIntent() {
+        bitmaprecebido = null;
+        bundle = getIntent().getExtras();
+        if (bundle.containsKey("camera")) {
+            byte[] bytes = bundle.getByteArray("camera");
+            bitmaprecebido = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
             binding.imageFiltro.setImageBitmap(bitmaprecebido);
 
-
-        }else if(bundle.containsKey("galeria")){
-            byte [] bytes=bundle.getByteArray("galeria");
-            bitmaprecebido= BitmapFactory.decodeByteArray(bytes,0,bytes.length );
+        } else if (bundle.containsKey("galeria")) {
+            byte[] bytes = bundle.getByteArray("galeria");
+            bitmaprecebido = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
             binding.imageFiltro.setImageBitmap(bitmaprecebido);
         }
 
     }
 
-
     //selecionar tipo de fragment
-    public void selecionarEfeito(){
+    public void selecionarEfeito() {
 
         binding.buttonOutrosEfeitos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 botaoClicadoOutros();
-                EdicaoImagemFragment edicaoImagemFragment=new EdicaoImagemFragment();
-                FragmentManager fr=getSupportFragmentManager();
-                FragmentTransaction ft=fr.beginTransaction();
+                EdicaoImagemFragment edicaoImagemFragment = new EdicaoImagemFragment();
+                FragmentManager fr = getSupportFragmentManager();
+                FragmentTransaction ft = fr.beginTransaction();
                 edicaoImagemFragment.setArguments(bundle);
-                ft.replace(R.id.frameFragment,edicaoImagemFragment);
+                ft.replace(R.id.frameFragment, edicaoImagemFragment);
                 ft.commit();
             }
         });
@@ -135,17 +129,17 @@ public class FiltroActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 botaoClicadoFiltros();
-                ImagemFiltrosFragment imagemFiltrosFragment=new ImagemFiltrosFragment();
-                FragmentManager fr=getSupportFragmentManager();
-                FragmentTransaction ft=fr.beginTransaction();
+                ImagemFiltrosFragment imagemFiltrosFragment = new ImagemFiltrosFragment();
+                FragmentManager fr = getSupportFragmentManager();
+                FragmentTransaction ft = fr.beginTransaction();
                 imagemFiltrosFragment.setArguments(bundle);
-                ft.replace(R.id.frameFragment,imagemFiltrosFragment);
+                ft.replace(R.id.frameFragment, imagemFiltrosFragment);
                 ft.commit();
             }
         });
     }
 
-    public void efeitos(Bitmap bitmap){
+    public void efeitos(Bitmap bitmap) {
         binding.imageFiltro.setImageBitmap(bitmap);
 
     }
@@ -160,27 +154,26 @@ public class FiltroActivity extends AppCompatActivity {
         binding.imageFiltro.setImageBitmap(bitmap);
     }
 
-    public void botaoClicadoFiltros(){
+    public void botaoClicadoFiltros() {
         binding.buttonOutrosEfeitos.setBackground(getDrawable(R.drawable.background_botao_filtros_nao_clicado));
         binding.buttonFiltros.setBackground(getDrawable(R.drawable.bacground_botao_filtros_clicado));
     }
 
-    public void botaoClicadoOutros(){
+    public void botaoClicadoOutros() {
         binding.buttonFiltros.setBackground(getDrawable(R.drawable.background_botao_filtros_nao_clicado));
         binding.buttonOutrosEfeitos.setBackground(getDrawable(R.drawable.bacground_botao_filtros_clicado));
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater=getMenuInflater();
-        menuInflater.inflate(R.menu.menu_filtros,menu);
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu_filtros, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.postMenu:
                 salvarPostagemFirebase();
 
@@ -194,68 +187,50 @@ public class FiltroActivity extends AppCompatActivity {
         return false;
     }
 
-    public class zoom extends ScaleGestureDetector.SimpleOnScaleGestureListener {
-
-        @Override
-        public boolean onScale(ScaleGestureDetector detector) {
-            scale=scale*detector.getScaleFactor();
-            scale=Math.max(0.1f,Math.min(scale,5f));
-
-            binding.imageFiltro.setScaleX(scale);
-            binding.imageFiltro.setScaleY(scale);
-
-
-
-            return true;
-        }
-
-
-    }
-    float x,y,dx,dy;
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         zoom.onTouchEvent(event);
-        if(event.getAction()==MotionEvent.ACTION_DOWN){
-            x=event.getX();
-            y=event.getY();
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            x = event.getX();
+            y = event.getY();
         }
 
-        if(event.getAction()==MotionEvent.ACTION_MOVE){
-            dx=event.getX()-x;
-            dy=event.getY()-y;
+        if (event.getAction() == MotionEvent.ACTION_MOVE) {
+            dx = event.getX() - x;
+            dy = event.getY() - y;
 
-            binding.imageFiltro.setX(binding.imageFiltro.getX()+dx);
-            binding.imageFiltro.setY(binding.imageFiltro.getY()+dy);
-            x=event.getX();
-            y=event.getY();
+            binding.imageFiltro.setX(binding.imageFiltro.getX() + dx);
+            binding.imageFiltro.setY(binding.imageFiltro.getY() + dy);
+            x = event.getX();
+            y = event.getY();
 
         }
 
-        if(event.getAction()==MotionEvent.ACTION_UP) {
+        if (event.getAction() == MotionEvent.ACTION_UP) {
             binding.imageFiltro.setScaleY(scaley);
             binding.imageFiltro.setScaleX(scalex);
             binding.imageFiltro.setX(27);
             binding.imageFiltro.setY(140);
-            scale=1.f;
+            scale = 1.f;
         }
 
 
         return true;
     }
 
-    public void salvarPostagemFirebase(){
-        DialogCarregamento.inflarDialog("Salvando Postagem",this);
+    public void salvarPostagemFirebase() {
+        DialogCarregamento.inflarDialog("Salvando Postagem", this);
 
-        String descricao=binding.descricao.getText().toString();
-        String aleatorio= UUID.randomUUID().toString();
-        StorageReference storageReference= FirebaseInstance.instanceStorage().child("imagens").child(UsuarioFirebase.getFirebaseUser().getEmail())
-                .child("postagens").child("postagem_"+aleatorio+".jpg");
+        String descricao = binding.descricao.getText().toString();
+        String aleatorio = UUID.randomUUID().toString();
+        StorageReference storageReference = FirebaseInstance.instanceStorage().child("imagens").child(UsuarioFirebase.getFirebaseUser().getEmail())
+                .child("postagens").child("postagem_" + aleatorio + ".jpg");
 
         BitmapDrawable drawable = (BitmapDrawable) binding.imageFiltro.getDrawable();
         Bitmap bitmap = drawable.getBitmap();
-        ByteArrayOutputStream baos=new ByteArrayOutputStream();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 70, baos);
-        byte[] bytes=baos.toByteArray();
+        byte[] bytes = baos.toByteArray();
         UploadTask task = storageReference.putBytes(bytes);
         task.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -266,8 +241,8 @@ public class FiltroActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Uri> task) {
                             Postagens postagens = new Postagens();
-                            Feed feed=new Feed();
-                            for (Usuario usuario:listSeguidores){
+                            Feed feed = new Feed();
+                            for (Usuario usuario : listSeguidores) {
                                 feed.setDescricaoPostagem(descricao);
                                 feed.setUriPostagem(task.getResult().toString());
                                 feed.setNomeUsuario(usuarioLogado.getNome());
@@ -277,24 +252,25 @@ public class FiltroActivity extends AppCompatActivity {
 
                             postagens.setUrlPostagem(task.getResult().toString());
                             postagens.setDescricaoPostagem(descricao);
-                            postagens.setPostagensAcumuladas(usuarioLogado.getPublicacoes()+1);
+                            postagens.setPostagensAcumuladas(usuarioLogado.getPublicacoes() + 1);
                             postagens.salvarPostagem();
                             carregarLogado();
                             DialogCarregamento.cancelarDialog();
-                            Toast toast=new Toast(getApplicationContext());
-                            toast.setView(View.inflate(getApplicationContext(),R.layout.salvo_sucesso,null));
+                            Toast toast = new Toast(getApplicationContext());
+                            toast.setView(View.inflate(getApplicationContext(), R.layout.salvo_sucesso, null));
                             toast.setDuration(Toast.LENGTH_LONG);
-                            toast.setGravity(Gravity.CENTER,0,0);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
                             toast.show();
                             finish();
                         }
                     });
-                }else {
+                } else {
+
                     DialogCarregamento.cancelarDialog();
-                    Toast toast=new Toast(getApplicationContext());
-                    toast.setView(View.inflate(getApplicationContext(),R.layout.erro_salvar,null));
+                    Toast toast = new Toast(getApplicationContext());
+                    toast.setView(View.inflate(getApplicationContext(), R.layout.erro_salvar, null));
                     toast.setDuration(Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.CENTER,0,0);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
                     toast.show();
                 }
             }
@@ -302,17 +278,17 @@ public class FiltroActivity extends AppCompatActivity {
 
     }
 
-    public void carregarLogado(){
+    public void carregarLogado() {
 
         DatabaseReference databaseReferenceLogado = FirebaseInstance.instanceDatabase().child("usuarios").child(UsuarioFirebase.dadosUsuario().getId());
         databaseReferenceLogado.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                usuarioLogado=snapshot.child("dadosUsuario").getValue(Usuario.class);
-                if(listSeguidores==null) {
+                usuarioLogado = snapshot.child("dadosUsuario").getValue(Usuario.class);
+                if (listSeguidores == null) {
                     listSeguidores = new ArrayList<>();
                     for (DataSnapshot ds : snapshot.child("seguidores").getChildren()) {
-                        Usuario usuario=ds.getValue(Usuario.class);
+                        Usuario usuario = ds.getValue(Usuario.class);
                         usuario.setId(ds.getKey());
                         listSeguidores.add(usuario);
                     }
@@ -328,6 +304,22 @@ public class FiltroActivity extends AppCompatActivity {
 
     }
 
+    public class zoom extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+
+        @Override
+        public boolean onScale(ScaleGestureDetector detector) {
+            scale = scale * detector.getScaleFactor();
+            scale = Math.max(0.1f, Math.min(scale, 5f));
+
+            binding.imageFiltro.setScaleX(scale);
+            binding.imageFiltro.setScaleY(scale);
+
+
+            return true;
+        }
+
+
+    }
 
 
 }

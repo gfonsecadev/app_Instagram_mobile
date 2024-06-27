@@ -33,10 +33,9 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="ThemeScreem" parent="Theme.AppCompat.DayNight.DarkActionBar">
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowBackground">@drawable/splash_screem</item>
+    <style name="Theme.Screen" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:statusBarColor">#FEFEFE</item>
+        <item name="android:windowIsTranslucent">true</item>
     </style>
 
 
