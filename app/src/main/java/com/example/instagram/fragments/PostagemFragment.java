@@ -67,11 +67,6 @@ public class PostagemFragment extends Fragment {
         }
     });
 
-    ActivityResultLauncher<Intent> launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-
-            }
-    );
 
     //recuperar dados da galeria
     ActivityResultLauncher galeria = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
